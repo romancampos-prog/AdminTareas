@@ -1,0 +1,32 @@
+# --- Directorios de salida (Binarios) ---
+[Bb]in/
+[Ob]j/
+
+# --- Visual Studio ---
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+.vsconfig
+
+# --- .NET Core / ASP.NET ---
+project.lock.json
+project.fragment.lock.json
+artifacts/
+out/
+publish/
+
+# --- Secretos y Configuración Local ---
+# Evita subir tus contraseñas de BD
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# --- Herramientas de Base de Datos ---
+*.db
+*.db-shm
+*.db-wal
+
+# --- Otros ---
+.DS_Store
+.env
