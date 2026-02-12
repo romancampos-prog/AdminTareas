@@ -5,10 +5,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "NombreTarea": "Tarea de prueba",
-    "Descripcion": "Esta es una tarea de prueba para verificar el funcionamiento del endpoint de agregar tarea",
-    "Prioridad": "Alta",
-    "Status": "Pendiente"  
+    "NombreTarea": "Tarea de prueba 2",
+    "DescripcionTarea": "2 Esta es una tarea de prueba para verificar el funcionamiento del endpoint de agregar tarea",
+    "Prioridad": "Media",
+    "Estatus": "Pendiente"  
 }
 
 ###

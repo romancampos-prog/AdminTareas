@@ -11,11 +11,13 @@ namespace Back.Modelos;
 /// Status -> Obligatorio dos estatus (Pendiente, Completadio) por defecto 'Pendiente'
 /// FechaRegistro -> Obligatoro automatico la fecha en la que la tarea se registra
 /// </summary>
+
+
 public class Tarea
 {
-   [Key]
-   [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-   public long IdTarea {get; set;}
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long IdTarea {get; set;}
 
     [Required]
     public required string NombreTarea {get; set;}
@@ -26,7 +28,8 @@ public class Tarea
     public required string Prioridad {get; set;} 
 
     [Required]
-    public required string Status {get; set;} = "Pendiente";
+    public required string Estatus {get; set;} = "Pendiente";
 
-    public DateTime FechaRegistro {get; set;} = DateTime.Now;
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public DateTime FechaRegistro {get; set;} 
 }

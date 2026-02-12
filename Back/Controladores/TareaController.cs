@@ -30,16 +30,47 @@ public class TareaController : ControllerBase {
             return StatusCode(201, new {
                 exito = true,
                 mensaje = "Tarea agregada con exito", 
-                idTarea = idGenerado}
-            );
+                idTarea = idGenerado
+            });
         }
         catch (Exception ex) {
+            var mensajeReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
             return StatusCode(500, new {
                 exito = false,
                 mensaje = "Ocurrio un error inseperado al procesar la solicitud",
-                detalle = ex.Message
+                detalle = mensajeReal
             });
         } 
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> TareaCompletada(long id, string status) {
+        if (id == null) {
+            return StatusCode(400, new {error = "No llego un id"});
+        }
+
+        try {
+            bool fueModificado = await _tareasService.TareaCompletada(id, status);
+            
+           if (fueModificado) {
+                return StatusCode(201, new {
+                   exito = true,
+                   mensaje = "Tarea Modificada con exito",
+                   detalle = fueModificado 
+                });
+            } 
+
+            return StatusCode(404, new { exito = false, mensaje = "No se encontro la tarea" });
+
+        } catch (Exception ex){
+            var mensajeReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+            return StatusCode(500, new
+            {
+                exito = false,
+                mensaje = "Ocurrio un error al editar la tarea",
+                detalle = mensajeReal
+            });
+        }
     }
 
 }
