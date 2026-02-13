@@ -10,7 +10,7 @@ public interface ITareaService
     Task<bool>TareaCompletada(long id, string status);
     
     //editar una tarea en especifico
-    Task<bool>EditarTarea(long id, Tarea nuevaTareaEditada);
+    Task<bool>EditarTarea(long id, TareaEditar nuevaTareaEditada);
 
     //retorna una lista ordenada de tareas pendientes
     Task<ICollection<Tarea>> ObtenerTareasPendientes();

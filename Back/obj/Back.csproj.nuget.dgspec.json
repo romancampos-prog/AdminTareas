@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Roman\\proyectos\\AdminTareas_facil\\Back\\Back.csproj": {}
+    "C:\\Roman\\proyectos\\AdminTareas_facil\\back\\Back.csproj": {}
   },
   "projects": {
-    "C:\\Roman\\proyectos\\AdminTareas_facil\\Back\\Back.csproj": {
+    "C:\\Roman\\proyectos\\AdminTareas_facil\\back\\Back.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Roman\\proyectos\\AdminTareas_facil\\Back\\Back.csproj",
+        "projectUniqueName": "C:\\Roman\\proyectos\\AdminTareas_facil\\back\\Back.csproj",
         "projectName": "Back",
-        "projectPath": "C:\\Roman\\proyectos\\AdminTareas_facil\\Back\\Back.csproj",
+        "projectPath": "C:\\Roman\\proyectos\\AdminTareas_facil\\back\\Back.csproj",
         "packagesPath": "C:\\Users\\roman.campos\\.nuget\\packages\\",
-        "outputPath": "C:\\Roman\\proyectos\\AdminTareas_facil\\Back\\obj\\",
+        "outputPath": "C:\\Roman\\proyectos\\AdminTareas_facil\\back\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\roman.campos\\AppData\\Roaming\\NuGet\\NuGet.Config"

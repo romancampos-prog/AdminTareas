@@ -5,8 +5,7 @@ using Back.Modelos;
 
 namespace Back.Services;
 
-public class TareaService : ITareaService
-{
+public class TareaService : ITareaService {
     private const bool V = false;
     private readonly TareaContext _context;
 
@@ -43,15 +42,19 @@ public class TareaService : ITareaService
     public async Task<bool> TareaCompletada(long id, string estatus) {
         var tarea = await _context.Tarea.FindAsync(id);
 
-        if (tarea == null) {
-            return false;
-        }
+        if (tarea == null) return false;
+
+        if (tarea.Estatus == estatus) return true;
 
         tarea.Estatus = estatus;
 
-        await _context.SaveChangesAsync();
+        try {
+            await _context.SaveChangesAsync();
+            return true;
 
-        return true;
+        } catch (DbUpdateConcurrencyException) { //port si se borro la tarea en el proceso
+            return false;
+        }  
     }
 
     
@@ -61,22 +64,32 @@ public class TareaService : ITareaService
     /// <param name="id">Identificador unico de la tarea</param>
     /// <param name="nuevaTareaEditada">Objeto de la tarea</param>
     /// <returns>false si la tarea no se modifico con exito, true si la tarea fue modificada con exito</returns>
-    public async Task<bool> EditarTarea(long id, Tarea nuevaTareaEditada) {
-        var tareaEditada =  await _context.Tarea.FindAsync(id);
+    public async Task<bool> EditarTarea(long id, TareaEditar nuevaTareaEditada) {
+        var tarea =  await _context.Tarea.FindAsync(id);
 
-        if (tareaEditada == null) {
-            return false;
-        }
+        if (tarea == null) return false;
 
-        tareaEditada.NombreTarea = nuevaTareaEditada.NombreTarea;
-        tareaEditada.DescripcionTarea = nuevaTareaEditada.DescripcionTarea;
-        tareaEditada.Prioridad = nuevaTareaEditada.Prioridad;
-        tareaEditada.Estatus = nuevaTareaEditada.Estatus;
+        tarea.NombreTarea = nuevaTareaEditada.NombreTarea;
+        tarea.DescripcionTarea = nuevaTareaEditada.DescripcionTarea;
+        tarea.Prioridad = nuevaTareaEditada.Prioridad;
+        tarea.Estatus = nuevaTareaEditada.Estatus;
 
-        await _context.SaveChangesAsync();
+        try {
+            await _context.SaveChangesAsync();
+            return true;
 
-        return true;
+        } catch (DbUpdateConcurrencyException) {
+            return false; //la tarea desaparecio mientras editabas
+        
+        } catch (DbUpdateException ex) {
+            throw new Exception("Error de la integridad en la bd", ex);
+        
+        } catch (Exception ex) {
+            throw new Exception("Ocurrio un error inesperado", ex);
+        } 
     }
+
+        
 
   
     ///<summary>

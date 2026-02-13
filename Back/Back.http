@@ -12,3 +12,11 @@ Accept: application/json
 }
 
 ###
+
+
+PATCH {{Back_HostAddress}}/Tarea/2
+Content-Type: application/json
+
+{
+    "estatus"  : "Completado"
+} 

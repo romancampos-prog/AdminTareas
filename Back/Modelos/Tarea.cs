@@ -13,6 +13,7 @@ namespace Back.Modelos;
 /// </summary>
 
 
+//Modelo principal
 public class Tarea
 {
     [Key]
@@ -28,8 +29,30 @@ public class Tarea
     public required string Prioridad {get; set;} 
 
     [Required]
-    public required string Estatus {get; set;} = "Pendiente";
+    public required string Estatus {get; set;}
 
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime FechaRegistro {get; set;} 
+}
+
+
+//Modelo tarea solo para modificar etstaus
+public class TareaEstatus {
+    [Required]
+    public required string Estatus {get; set;}
+}
+
+
+//Modelo de tarea solo para editar propiedades especificas
+public class TareaEditar {
+    [Required]
+    public required string NombreTarea {get; set;}
+
+    public string? DescripcionTarea {get; set;}
+
+    [Required]
+    public required string Prioridad {get; set;}  
+
+    [Required]
+    public required string Estatus {get; set;}  
 }

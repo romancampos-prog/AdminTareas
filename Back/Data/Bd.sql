@@ -11,3 +11,5 @@ CREATE TABLE Tarea (
 	Estatus NVARCHAR (20) NOT NULL DEFAULT 'Pendiente' CONSTRAINT EstatusK CHECK (Estatus in ('Pendiente', 'Completado')),
 	FechaRegistro DATETIME2 NOT NULL CONSTRAINT DF_FechaTarea DEFAULT GETDATE()
 );
+
+select * from Tarea
