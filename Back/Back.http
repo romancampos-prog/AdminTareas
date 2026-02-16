@@ -4,11 +4,13 @@ POST {{Back_HostAddress}}/Tarea
 Content-Type: application/json
 Accept: application/json
 
-{
-    "NombreTarea": "Tarea de prueba 2",
-    "DescripcionTarea": "2 Esta es una tarea de prueba para verificar el funcionamiento del endpoint de agregar tarea",
+{  
+    "IdTarea" : 0,
+    "NombreTarea": "Tarea de prueba 4",
+    "DescripcionTarea": "4 Esta es una tarea de prueba para verificar el funcionamiento del endpoint de agregar tarea",
     "Prioridad": "Media",
-    "Estatus": "Pendiente"  
+    "Estatus": "Pendiente",
+    "FechaRegistro" : "2026-02-16"  
 }
 
 ###
@@ -18,5 +20,30 @@ PATCH {{Back_HostAddress}}/Tarea/2
 Content-Type: application/json
 
 {
-    "estatus"  : "Completado"
+    "estatus"  : "Pendiente"
 } 
+
+###
+
+
+PUT {{Back_HostAddress}}/Tarea/editar/2
+Content-Type: application/json
+Accept: application/json
+
+{
+    "NombreTarea": "Tarea de prueba editandola",
+    "DescripcionTarea": "2 tarea perfectamente editada ",
+    "Prioridad": "Baja",
+    "Estatus": "Pendiente"
+} 
+
+###
+
+
+
+GET {{Back_HostAddress}}/Tarea/pendientes
+Content-Type: application/json
+Accept: application/json
+
+###
+

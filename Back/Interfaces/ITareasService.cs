@@ -7,7 +7,7 @@ public interface ITareaService
     Task<long> AgregarNuevaTarea(Tarea tarea);
 
     //cambiar el estatus de una tarea a completada
-    Task<bool>TareaCompletada(long id, string status);
+    Task<bool>TareaCambiarEstatus(long id, string status);
     
     //editar una tarea en especifico
     Task<bool>EditarTarea(long id, TareaEditar nuevaTareaEditada);

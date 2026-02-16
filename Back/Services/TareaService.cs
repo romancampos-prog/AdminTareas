@@ -24,9 +24,10 @@ public class TareaService : ITareaService {
     /// <param name="tarea"> Objeto de informacion tarea</param>
     /// <returns>Retorna el Id con el que se genero la nueva tarea</returns>
     public async Task<long> AgregarNuevaTarea(Tarea nuevaTarea)  {
+
+        nuevaTarea.IdTarea = 0; //FORZAMOS QUE ENTRE COMO CERO
         
         await _context.Tarea.AddAsync(nuevaTarea);
-
         await _context.SaveChangesAsync();
 
         return nuevaTarea.IdTarea;
@@ -39,7 +40,7 @@ public class TareaService : ITareaService {
      /// <param name="id">Identificador unico de la tarea</param>
      /// <param name="estatus">Nuevo estatus de la tarea (ej: Completado)</param>
      /// <returns>true si se completó la tarea, false si no se encontró la tarea</returns>
-    public async Task<bool> TareaCompletada(long id, string estatus) {
+    public async Task<bool> TareaCambiarEstatus(long id, string estatus) {
         var tarea = await _context.Tarea.FindAsync(id);
 
         if (tarea == null) return false;
@@ -98,7 +99,7 @@ public class TareaService : ITareaService {
     /// <returns>una lista ordenada de tareas<returns>
     public async Task<ICollection<Tarea>> ObtenerTareasPendientes() {
         return await _context.Tarea
-                    .Where(t => t.Estatus == "Pendiente")
+                    .AsNoTracking()
                     .OrderBy(t => t.Prioridad == "Alta" ? 1:
                                   t.Prioridad == "Media" ? 2:
                                   t.Prioridad == "Baja" ? 3 : 4)
@@ -114,6 +115,7 @@ public class TareaService : ITareaService {
     /// <returns>una lista ordenada de tareas completadas <returns>
     public async Task<ICollection<Tarea>> TareasCompletadas () {
         return await _context.Tarea
+                        .AsNoTracking()
                         .Where(t => t.Estatus == "Completado")
                         .OrderBy(t => t.FechaRegistro)
                         .ToListAsync();

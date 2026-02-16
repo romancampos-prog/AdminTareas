@@ -13,7 +13,11 @@ builder.Services.AddDbContext<TareaContext>(options =>
 //Interrfaces con servicio
 builder.Services.AddScoped<ITareaService, TareaService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true; // Esto apaga el error automático
+    });
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

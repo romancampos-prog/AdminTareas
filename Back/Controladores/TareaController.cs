@@ -1,8 +1,7 @@
 using Back.Interfaces;
 using Back.Modelos;
+using Back.Validaciones;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Back.Controladores;
 
@@ -19,17 +18,19 @@ public class TareaController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> AgregarNuevaTarea(Tarea tarea) {
-        if (tarea == null) {
-            return StatusCode(400, new{error = "NO HAY TAREA QUE AGREGAR"});
-        }
+    public async Task<IActionResult> AgregarNuevaTarea(Tarea nuevaTarea) {
+        var erroresT = TareaValidaciones.ValidarNuevaTarea(nuevaTarea);
 
-        if (string.IsNullOrWhiteSpace(tarea.NombreTarea)) {
-            return StatusCode(400, new {error = "No hay nombre de tarea"});
+        if (erroresT.Any()) { //hay errores?
+            return StatusCode(400, new {
+                exito = false,
+                mensaje = "Error al capturar la tarea",
+                detalle = erroresT
+            });
         }
 
         try {
-            long  idGenerado = await _tareasService.AgregarNuevaTarea(tarea);
+            long  idGenerado = await _tareasService.AgregarNuevaTarea(nuevaTarea);
 
             return StatusCode(201, new {
                 exito = true,
@@ -50,14 +51,20 @@ public class TareaController : ControllerBase {
     
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> TareaCompletada([FromRoute] long id, [FromBody] TareaEstatus nuevoEstatus ) {
-        if (id <= 0 ) return StatusCode(400, new {exito = false, mensaje = "Id de tarea invalido"});
-        if (string.IsNullOrEmpty(nuevoEstatus.Estatus)) return StatusCode(400, new {exito = false, mensaje = "El estatus es requerido"});
-        if (!estatusValidos.Contains(nuevoEstatus.Estatus)) return StatusCode(400, new {exito = false, mensaje = "Estatus Invalido"});
+    public async Task<IActionResult> TareaCambiarEstatus([FromRoute] long id, [FromBody] TareaEstatus nuevoEstatus ) {
+        
+        var erroresE = TareaValidaciones.ValidarCambioEstatusTarea(nuevoEstatus, id);
 
+        if (erroresE.Any()) {
+            return StatusCode(400, new {
+                exito = false,
+                mensaje = "Ocurrio un error al cambiar el estatus de la tarea",
+                detalle = erroresE
+            });
+        }
 
         try {
-            bool fueModificado = await _tareasService.TareaCompletada(id, nuevoEstatus.Estatus);
+            bool fueModificado = await _tareasService.TareaCambiarEstatus(id, nuevoEstatus.Estatus);
             
            if (fueModificado) {
                 return StatusCode(200, new {
@@ -72,20 +79,83 @@ public class TareaController : ControllerBase {
         } catch (Exception ex){
             var detalleError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
             
-            return StatusCode(500, new
-            {
+            return StatusCode(500, new {
                 exito = false,
-                mensaje = "Ocurrio un error al editar la tarea",
+                mensaje = "Ocurrio un error al editar el estatus de la tarea",
                 detalle = detalleError
             });
         }
     }
 
     
-    [HttpPut("/editar/{id}")]
+    [HttpPut("editar/{id}")]
     public async Task<IActionResult> EditarTarea([FromRoute] long id, [FromBody] TareaEditar nuevaTareaEditada) {
-        //verficar todos los datos sean correctos
+        var erroresET = TareaValidaciones.ValidarEditarTarea(nuevaTareaEditada, id);
+
+        if (erroresET.Any()) {
+            return StatusCode(400, new {
+                exito = false,
+                mensaje = "Algo fallo al Actualizar la tarea",
+                detalle = erroresET
+            });
+        }
+
+        try {
+            bool fueEditada = await _tareasService.EditarTarea(id, nuevaTareaEditada);
+
+            if (!fueEditada) {
+                return StatusCode (400, new {
+                    exito = false,
+                    mensaje = "Tarea no encontrada"
+                });
+            } 
+
+            return StatusCode (201, new {
+                exito = true,
+                mensaje = "Tarea editada con exito"
+            });
+            
+        } catch (Exception ex) {
+            var detalleError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+            
+            return StatusCode(500, new {
+                exito = false,
+                mensaje = "Ocurrio un error al editar la tarea",
+                detalle = detalleError
+            });
+        }
         
+    } 
+
+
+    [HttpGet("pendientes")]
+    public async Task<IActionResult> ObrtenerTareasPendientes() {
+        try {
+            var tareas = await _tareasService.ObtenerTareasPendientes();
+            
+            if (!tareas.Any())  {
+                return StatusCode(200 , new {
+                    exito = true,
+                    mensaje = "No hay tareas registradas por el momento"
+                });
+            }
+
+            return StatusCode(200, new {
+                exito = true,
+                mensaje = "Tareas pendientes obtenidas con exito",
+                detalle = tareas
+            });
+
+        } catch (Exception ex){
+            var detalleError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+            
+            return StatusCode(500, new {
+                exito = false,
+                mensaje = "Ocurrio un error al obtener las tareas pendientes",
+                detalle = detalleError
+            });
+        }
     }
+
 
 }
